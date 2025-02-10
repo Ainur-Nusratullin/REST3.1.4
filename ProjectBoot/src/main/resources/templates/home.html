@@ -65,49 +65,16 @@
         }
 
         .logout-button:hover {
-            background-color: #ff8c00; /* Darker orange on hover */
+            background-color: #ff8c00;
         }
 
     </style>
 </head>
 <body>
 
-<!--<div class="logout-container">-->
-<!--    <form th:action="@{/login}" method="post">-->
-<!--        <button type="submit" class="logout-button">Выйти</button>-->
-<!--    </form>-->
-<!--</div>-->
-
-<!--<div class="table-container">-->
-<!--    <h2>User Details</h2>-->
-<!--    <table class="table">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th>ID</th>-->
-<!--            <th>Name</th>-->
-<!--            <th>Surname</th>-->
-<!--            <th>Age</th>-->
-<!--            <th>Email</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="allUser : ${allUser}">-->
-<!--            <td th:text="${allUser.id}"></td>-->
-<!--            <td th:text="${allUser.name}"></td>-->
-<!--            <td th:text="${allUser.surname}"></td>-->
-<!--            <td th:text="${allUser.age}"></td>-->
-<!--            <td th:text="${allUser.email}"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</div>-->
-
-
-
-
 
 <div class="logout-container">
-    <form th:action="@{/logout}" method="post">
+    <form th:action="@{/login}" method="post">
         <button type="submit" class="logout-button">Выйти</button>
     </form>
 </div>
@@ -122,6 +89,7 @@
             <th>Фамилия</th>
             <th>Возраст</th>
             <th>Email</th>
+            <th>Роль</th>
         </tr>
         </thead>
         <tbody>
@@ -131,6 +99,7 @@
             <td th:text="${allUser.surname}"></td>
             <td th:text="${allUser.age}"></td>
             <td th:text="${allUser.email}"></td>
+            <td th:text="${allUser.roles}"></td>
         </tr>
         </tbody>
     </table>

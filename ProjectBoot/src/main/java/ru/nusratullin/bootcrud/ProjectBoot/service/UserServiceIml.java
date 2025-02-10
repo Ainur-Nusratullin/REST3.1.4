@@ -35,7 +35,6 @@ public class UserServiceIml implements UserService {
 
     @Transactional
     @Override
-
     public void save(User user) {
         userDao.save(user);
     }
