@@ -40,7 +40,8 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"], /* Добавлено для числовых полей */
+        input[type="email"] { /* Добавлено для поля email */
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -68,7 +69,7 @@
 <body>
 <div class="form-container">
     <h2>Add User</h2>
-    <form th:action="@{/saveUser}" method="post" th:object="${user}">
+    <form th:action="@{/admin/saveUser}" method="post" th:object="${user}">
         <div class="form-group">
             <label for="name">Name</label>
             <input type="text" id="name" th:field="*{name}" required>
@@ -78,9 +79,14 @@
             <input type="text" id="surname" th:field="*{surname}" required>
         </div>
         <div class="form-group">
-            <label for="salary">Salary</label>
-            <input type="number" id="salary" th:field="*{salary}" required>
+            <label for="age">Age</label>
+            <input type="number" id="age" th:field="*{age}" required>
         </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" th:field="*{email}" required>
+        </div>
+
         <button type="submit">Add User</button>
     </form>
 </div>

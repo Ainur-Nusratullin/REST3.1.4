@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.nusratullin.bootcrud.ProjectBoot.dao.UserDao;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
+import ru.nusratullin.bootcrud.ProjectBoot.repositories.UserRepository;
 
 
 import java.util.List;
@@ -14,9 +15,16 @@ public class UserServiceIml implements UserService {
 
     private UserDao userDao;
 
+    private UserRepository userRepository;
+
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -48,5 +56,11 @@ public class UserServiceIml implements UserService {
     @Override
     public User getById(int id) {
         return userDao.getById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

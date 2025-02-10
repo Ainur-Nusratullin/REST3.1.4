@@ -1,7 +1,6 @@
 package ru.nusratullin.bootcrud.ProjectBoot.dao;
 
 
-
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 
 import java.util.List;

@@ -3,16 +3,20 @@ package ru.nusratullin.bootcrud.ProjectBoot.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 
+import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 @Controller
+@RequestMapping("/user")
 public class UserController {
-
     private UserService userService;
 
     @Autowired
@@ -20,42 +24,22 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/allUser")
-    public String getAllUser(Model model) {
-        List<User> users = userService.getAllUser();
-        model.addAttribute("allUser", users);
-        return "user";
-    }
+    @GetMapping(value = "/")
+    public String getAllUser(Model model, Principal principal) {
+        String username = principal.getName();
+        User loggedInUser = userService.getByEmail(username);
+        System.out.println(loggedInUser);
 
-    @RequestMapping("/addNewUser")
-    public String addNewUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        return "user-info";
-    }
+        List<String> roles = loggedInUser.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
+        if (roles.contains("ROLE_USER")) {
 
-    @RequestMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.save(user);
-        return "redirect:/allUser";
-    }
-
-    @GetMapping("/editUser")
-    public String editUser(@RequestParam("id") int id, Model model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
-        return "update";
-    }
-
-    @PostMapping("/editUser")
-    public String editUser(@ModelAttribute("user") User user) {
-        userService.edit(user);
-        return "redirect:/allUser";
-    }
-
-    @GetMapping("/deleteUser")
-    public String deleteUser(@RequestParam("id") int id) {
-        userService.deleteById(id);
-        return "redirect:/allUser";
+            model.addAttribute("allUser", Collections.singletonList(loggedInUser));
+        } else {
+            List<User> users = userService.getAllUser();
+            model.addAttribute("allUser", users);
+        }
+        return "home";
     }
 }

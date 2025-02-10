@@ -2,18 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit User</title>
+    <title>Login</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding-top: 20px;
         }
 
         .form-container {
@@ -22,7 +20,6 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             width: 400px;
-            margin-bottom: 20px;
         }
 
         h2 {
@@ -43,80 +40,67 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
+            transition: border-color 0.3s ease; /* Add transition for focus state */
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff; /* Change border color on focus */
+            outline: none; /* Remove default focus outline */
         }
 
         button {
             background-color: #007bff;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 20px;  /* Increase padding for better button size */
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
+            transition: background-color 0.3s ease; /* Add transition for hover effect */
         }
 
         button:hover {
             background-color: #0056b3;
         }
 
-        a.button {
-            background-color: #6c757d;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            display: block;
-            text-align: center;
-            text-decoration: none;
-            margin-top: 20px;
-            width: 100%;
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+            text-align: center; /* Center the error message */
         }
 
-        a.button:hover {
-            background-color: #5a6268;
+        .form-group:last-child {
+            margin-bottom: 0; /* Remove margin from the last form group */
         }
 
     </style>
 </head>
 <body>
 <div class="form-container">
-    <h2>Edit User</h2>
-    <form th:action="@{/admin/editUser}" method="post" th:object="${user}">
-        <input type="hidden" th:field="*{id}" />
-
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" id="name" th:field="*{name}" required>
+    <h2>Login</h2>
+    <form th:action="@{/login}" method="post">
+        <div th:if="${param.error}" class="error-message">
+            Invalid username or password.
         </div>
-
         <div class="form-group">
-            <label for="surname">Surname</label>
-            <input type="text" id="surname" th:field="*{surname}" required>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
         </div>
-
         <div class="form-group">
-            <label for="age">Age</label>
-            <input type="number" id="age" th:field="*{age}" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
         </div>
-
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="text" id="email" th:field="*{email}" required>
-        </div>
-
-        <button type="submit">Save</button>
+        <button type="submit">Login</button>
     </form>
 </div>
-<a href="/admin/allUser" class="button">Back to Users List</a>
 </body>
 </html>

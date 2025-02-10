@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 
+
 import java.util.List;
 
 @Repository
@@ -43,7 +44,8 @@ public class UserDaoImp implements UserDao {
         if (user1 != null) {
             user1.setName(user.getName());
             user1.setSurname(user.getSurname());
-            user1.setSalary(user.getSalary());
+            user1.setAge(user.getAge());
+            user1.setEmail(user.getEmail());
             entityManager.merge(user1);
         }
     }

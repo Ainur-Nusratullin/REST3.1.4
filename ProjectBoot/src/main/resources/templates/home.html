@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>User Details</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content to the top */
             min-height: 100vh;
             margin: 0;
             padding-top: 20px; /* Add padding at the top */
@@ -24,6 +27,8 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             margin-bottom: 20px; /* Add some space below the table */
+            width: 80%; /* Adjust width as needed */
+            max-width: 800px; /* Limit the maximum width */
         }
         table {
             border-collapse: collapse;
@@ -40,42 +45,13 @@
             background-color: #f2f2f2; /* Light gray background for header cells */
             font-weight: bold; /* Make the header bold */
         }
-        .button-container {
-            display: flex;
-            gap: 5px; /* Add some space between buttons */
-        }
-
-        .button-container input[type="button"] {
-            background-color: #007bff;
-            color: white;
-            padding: 5px 10px; /* Smaller button sizes */
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px; /* Smaller font */
-        }
-
-        .button-container input[type="button"]:hover {
-            background-color: #0056b3; /* Darken color on hover */
-        }
-        input[type="button"] {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px; /* Space above button */
-        }
-        input[type="button"]:hover {
-            background-color: #0056b3; /* Darken color on hover */
-        }
 
         .logout-container {
             display: flex;
-            justify-content: flex-end; /* Align to the right */
-            padding: 10px;
+            justify-content: flex-end;  /* Aligns content to the right */
+            width: 100%;           /* Take full width to push the button to the right */
+            padding: 10px 20px;     /* Add some padding for better spacing */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
         }
 
         .logout-button {
@@ -96,8 +72,42 @@
 </head>
 <body>
 
+<!--<div class="logout-container">-->
+<!--    <form th:action="@{/login}" method="post">-->
+<!--        <button type="submit" class="logout-button">Выйти</button>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<div class="table-container">-->
+<!--    <h2>User Details</h2>-->
+<!--    <table class="table">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            <th>ID</th>-->
+<!--            <th>Name</th>-->
+<!--            <th>Surname</th>-->
+<!--            <th>Age</th>-->
+<!--            <th>Email</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="allUser : ${allUser}">-->
+<!--            <td th:text="${allUser.id}"></td>-->
+<!--            <td th:text="${allUser.name}"></td>-->
+<!--            <td th:text="${allUser.surname}"></td>-->
+<!--            <td th:text="${allUser.age}"></td>-->
+<!--            <td th:text="${allUser.email}"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</div>-->
+
+
+
+
+
 <div class="logout-container">
-    <form th:action="@{/login}" method="post">  <!-- Changed to /logout -->
+    <form th:action="@{/logout}" method="post">
         <button type="submit" class="logout-button">Выйти</button>
     </form>
 </div>
@@ -108,12 +118,10 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Age</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Возраст</th>
             <th>Email</th>
-            <th>Role</th>
-            <th>Operations</th>
         </tr>
         </thead>
         <tbody>
@@ -123,20 +131,10 @@
             <td th:text="${allUser.surname}"></td>
             <td th:text="${allUser.age}"></td>
             <td th:text="${allUser.email}"></td>
-            <td th:text="${allUser.roles}"></td>
-            <td>
-                <div class="button-container">
-                    <input type="button" value="Update" th:onclick="'window.location.href = \'' + @{/admin/editUser(id=${allUser.id})} + '\''"/>
-                    <input type="button" value="Delete" th:onclick="'window.location.href = \'' + @{/admin/deleteUser(id=${allUser.id})} + '\''"/>
-                </div>
-            </td>
         </tr>
         </tbody>
     </table>
 </div>
-
-
-<input type="button" value="Add New User" onclick="window.location.href = '/admin/addNewUser'"/>
 
 </body>
 </html>
