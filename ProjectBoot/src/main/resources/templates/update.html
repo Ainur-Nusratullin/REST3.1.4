@@ -43,7 +43,8 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        input[type="password"] { /* Added password input style */
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -86,6 +87,17 @@
             background-color: #5a6268;
         }
 
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px; /* Space between checkboxes */
+        }
+
+        .checkbox-group label {
+            margin-left: 5px; /* Space between checkbox and label */
+            font-weight: normal; /* Reset label font-weight */
+        }
+
     </style>
 </head>
 <body>
@@ -115,18 +127,73 @@
         </div>
 
         <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">Password:</label>
             <input type="password" id="password" th:field="*{password}" required>
         </div>
 
         <div class="form-group">
-            <label for="role">Role</label>
-            <input type="text" id="role" th:field="*{roles}" required>
+            <label>Roles:</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER" >
+                <label for="roleUser">User</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">
+                <label for="roleAdmin">Admin</label>
+            </div>
         </div>
 
         <button type="submit">Save</button>
     </form>
 </div>
-<a href="/admin/allUser" class="button">Back to Users List</a>
+
+
+
+<!--<div class="form-container">-->
+<!--    <h2>Edit User</h2>-->
+<!--    <form th:action="@{/admin/editUser}" method="post" th:object="${user}">-->
+<!--        <input type="hidden" th:field="*{id}" />-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="name">Name</label>-->
+<!--            <input type="text" id="name" th:field="*{name}" required>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="surname">Surname</label>-->
+<!--            <input type="text" id="surname" th:field="*{surname}" required>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="age">Age</label>-->
+<!--            <input type="number" id="age" th:field="*{age}" required>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="email">Email</label>-->
+<!--            <input type="text" id="email" th:field="*{email}" required>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="password">Password:</label>-->
+<!--            <input type="password" id="password" name="password"> &lt;!&ndash; No th:field &ndash;&gt;-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label>Roles:</label>-->
+<!--            <div class="checkbox-group">-->
+<!--                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER" >-->
+<!--                <label for="roleUser">User</label>-->
+<!--            </div>-->
+<!--            <div class="checkbox-group">-->
+<!--                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">-->
+<!--                <label for="roleAdmin">Admin</label>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <button type="submit">Save</button>-->
+<!--    </form>-->
+<!--</div>-->
+<a href="/admin/" class="button">Back to Users List</a>
 </body>
 </html>

@@ -1,16 +1,17 @@
 package ru.nusratullin.bootcrud.ProjectBoot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
+
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
-import ru.nusratullin.bootcrud.ProjectBoot.repositories.RoleRepository;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 
-import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 
 @Controller
@@ -24,42 +25,86 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/")
-    public String getAllUser(Model model) {
-        List<User> users = userService.getAllUser();
-        model.addAttribute("allUser", users);
+//    @GetMapping("/")
+//    public String getAllUser(Model model) {
+//        model.addAttribute("allUser", userService.readAllUser());
+//        return "user";
+//    }
+
+    @GetMapping("/")
+    public String getAllUser(@AuthenticationPrincipal User user,Model model) {
+        model.addAttribute("currentUser", userService.getUserHome(user));
+        model.addAttribute("allUser", userService.readAllUser());
         return "user";
     }
 
-    @RequestMapping("/addNewUser")
+
+
+
+
+
+
+    @GetMapping("/addNewUser")
     public String addNewUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "user-info";
     }
 
-    @RequestMapping("/saveUser")
-    public String saveUser(@ModelAttribute("user") User user) {
-        userService.save(user);
+    @PostMapping("/saveUser")
+    public String saveUser(@RequestParam String name,
+                           @RequestParam String surname,
+                           @RequestParam int age,
+                           @RequestParam String email,
+                           @RequestParam String password,
+                           @RequestParam Set<String> roles) {
+        userService.saveUser(name, surname, age, email, password, roles);
         return "redirect:/admin/";
     }
 
     @GetMapping("/editUser")
-    public String editUser(@RequestParam("id") int id, Model model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
+    public String updateUser(@RequestParam("id") Long id, Model model) {
+        model.addAttribute("user", userService.readUserById(id));
         return "update";
     }
 
     @PostMapping("/editUser")
-    public String editUser(@ModelAttribute("user") User user) {
-        userService.edit(user);
+    public String updateUser(@RequestParam Long id,
+                             @RequestParam String name,
+                             @RequestParam String surname,
+                             @RequestParam int age,
+                             @RequestParam String email,
+                             @RequestParam String password,
+                             @RequestParam(required = false) Set<String> roles) {
+        userService.updateUser(id, name, surname, age, email, password, roles);
         return "redirect:/admin/";
     }
 
     @GetMapping("/deleteUser")
-    public String deleteUser(@RequestParam("id") int id) {
-        userService.deleteById(id);
+    public String deleteUser(@RequestParam("id") Long id) {
+        userService.deleteUserById(id);
         return "redirect:/admin/";
     }
+
+    @GetMapping("/find")
+    public String getUserById(@RequestParam(value = "id", required = false) Long id, Model model) {
+        model.addAttribute("user", userService.readUserById(id));
+        return "user";
+    }
+
+//    @GetMapping("/getUser")
+//    @ResponseBody
+//    public Optional<User> getUserForEdit(@RequestParam Long id) {
+//        return userService.readUserById(id);
+//    }
+
+
+//    @GetMapping("/")
+//    public String getUser(@AuthenticationPrincipal User user, Model model) {
+//        model.addAttribute("currentUser", userService.getUserHome(user));
+//        return "user";
+//    }
+
+
+
 }

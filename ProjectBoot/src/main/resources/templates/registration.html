@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Registration</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -40,6 +40,8 @@
         }
 
         input[type="text"],
+        input[type="number"],
+        input[type="email"],
         input[type="password"] {
             width: 100%;
             padding: 10px;
@@ -47,25 +49,28 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-            transition: border-color 0.3s ease;
         }
 
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            border-color: #007bff;
-            outline: none;
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto;
         }
 
         button {
             background-color: #007bff;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
             width: 100%;
-            transition: background-color 0.3s ease;
         }
 
         button:hover {
@@ -74,50 +79,51 @@
 
         .error-message {
             color: red;
-            margin-bottom: 15px;
+            margin-top: 10px;
             text-align: center;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .register-link a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 <div class="form-container">
-    <h2>Login</h2>
-    <form th:action="@{/login}" method="post">
-        <div th:if="${param.error}" class="error-message">
-            Invalid username or password.
+    <h2>Registration</h2>
+    <form th:action="@{/registration}" method="post">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" name="surname" required>
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
+            <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <button type="submit">Login</button>
+        <div class="form-group">
+            <label>Roles:</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER">
+                <label for="roleUser">User</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">
+                <label for="roleAdmin">Admin</label>
+            </div>
+        </div>
+        <button type="submit">Registration</button>
+        <div th:if="${param.error}" class="error-message">
+            Registration failed. Try again
+        </div>
     </form>
-    <div class="register-link">
-        <a href="/registration">Register</a>
-    </div>
 </div>
 </body>
 </html>

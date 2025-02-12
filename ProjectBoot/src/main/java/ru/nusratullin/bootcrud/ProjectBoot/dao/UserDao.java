@@ -1,19 +1,18 @@
 package ru.nusratullin.bootcrud.ProjectBoot.dao;
 
-
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface UserDao {
-    List<User> getAllUser();
+@Repository
+public interface UserDao extends JpaRepository<User, Long> {
+    @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.email = :email")
+//    @EntityGraph(attributePaths = {"roles"})
+    Optional<User> findByEmail(String email);
 
-    void save(User user);
-
-    void deleteById(int id);
-
-    void edit(User user);
-
-    User getById(int id);
-
+//    User findByName(String name);
 }

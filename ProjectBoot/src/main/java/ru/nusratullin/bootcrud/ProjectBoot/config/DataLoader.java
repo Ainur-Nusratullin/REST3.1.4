@@ -1,80 +1,89 @@
 package ru.nusratullin.bootcrud.ProjectBoot.config;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
-import ru.nusratullin.bootcrud.ProjectBoot.repositories.RoleRepository;
-import ru.nusratullin.bootcrud.ProjectBoot.repositories.UserRepository;
-
+import ru.nusratullin.bootcrud.ProjectBoot.service.RoleService;
+import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
-public class DataLoader implements CommandLineRunner {
+public class DataLoader {
 
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public void setRoleService(RoleService roleService) {
+        this.roleService = roleService;
     }
 
-    @Autowired
-    public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
+    @PostConstruct
+    @Transactional
+    public void loadData() {
+        try {
+            if (roleService.findByName("ROLE_USER").isEmpty()) {
+                roleService.save(new Role("ROLE_USER"));
+            }
 
-    @Override
-    public void run(String... args) throws Exception {
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        if (adminRole == null) {
-            adminRole = new Role("ROLE_ADMIN");
-            roleRepository.save(adminRole);
+            if (roleService.findByName("ROLE_ADMIN").isEmpty()) {
+                roleService.save(new Role("ROLE_ADMIN"));
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при создании ролей: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+        try {
+            if (userService.findByEmail("admin@mail.ru").isEmpty()) {
+                User admin = new User();
+                admin.setName("admin");
+                admin.setSurname("admin");
+                admin.setAge(27);
+                admin.setEmail("admin@mail.ru");
+                admin.setPassword("admin");
+                Set<Role> adminRoles = new HashSet<>();
+                roleService.findByName("ROLE_ADMIN").ifPresent(adminRoles::add);
+                roleService.findByName("ROLE_USER").ifPresent(adminRoles::add);
+                Set<String> adminRoleNames = adminRoles.stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toSet());
+                userService.saveUser(admin.getName(), admin.getSurname(), admin.getAge(), admin.getEmail(), admin.getPassword(), adminRoleNames);
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при создании админа: " + e.getMessage());
+            e.printStackTrace();
+            return;
         }
 
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        if (userRole == null) {
-            userRole = new Role("ROLE_USER");
-            roleRepository.save(userRole);
-        }
-
-        User admin = userRepository.findByEmail("admin@example.com");
-        if (admin == null) {
-            admin = new User();
-            admin.setName("admin");
-            admin.setSurname("nusratullin");
-            admin.setAge(27);
-            admin.setEmail("admin@mail.com");
-            admin.setPassword(passwordEncoder.encode("admin"));
-            Set<Role> adminRoles = new HashSet<>();
-            adminRoles.add(userRole);
-            adminRoles.add(adminRole);
-            admin.setRoles(adminRoles);
-            userRepository.save(admin);
-        }
-
-        User user = userRepository.findByEmail("user@example.com");
-        if (user == null) {
-            user = new User();
-            user.setName("user"); //
-            user.setSurname("nusratullin");
-            user.setAge(20);
-            user.setEmail("user@mail.com");
-            user.setPassword(passwordEncoder.encode("user"));
-            Set<Role> userRoles = new HashSet<>();
-            userRoles.add(userRole);
-            user.setRoles(userRoles);
-            userRepository.save(user);
+        try {
+            if (userService.findByEmail("user@mail.ru").isEmpty()) {
+                User user = new User();
+                user.setName("user");
+                user.setSurname("user");
+                user.setAge(29);
+                user.setEmail("user@mail.ru");
+                user.setPassword("user");
+                Set<Role> userRoles = new HashSet<>();
+                roleService.findByName("ROLE_USER").ifPresent(userRoles::add);
+                Set<String> userRoleNames = userRoles.stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toSet());
+                userService.saveUser(user.getName(), user.getSurname(), user.getAge(), user.getEmail(), user.getPassword(), userRoleNames);
+            }
+        } catch (Exception e) {
+            System.err.println("Ошибка при создании юзера: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

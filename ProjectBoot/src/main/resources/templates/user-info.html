@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add User</title>
+    <title>Registration</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -40,14 +40,26 @@
         }
 
         input[type="text"],
-        input[type="number"], /* Добавлено для числовых полей */
-        input[type="email"] { /* Добавлено для поля email */
+        input[type="number"],
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+            width: auto;
         }
 
         button {
@@ -63,6 +75,12 @@
 
         button:hover {
             background-color: #0056b3;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
@@ -88,13 +106,19 @@
         </div>
 
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" th:field="*{password}" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
         </div>
-
         <div class="form-group">
-            <label for="role">Role</label>
-            <input type="text" id="role" th:field="*{roles}" required>
+            <label>Roles:</label>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleUser" name="roles" value="ROLE_USER">
+                <label for="roleUser">User</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="roleAdmin" name="roles" value="ROLE_ADMIN">
+                <label for="roleAdmin">Admin</label>
+            </div>
         </div>
 
         <button type="submit">Add User</button>

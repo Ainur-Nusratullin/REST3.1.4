@@ -16,16 +16,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+        String redirectUrl = "/";
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("ROLE_ADMIN")) {
-                response.sendRedirect("/admin/");
-                return;
-            } else if (authority.getAuthority().equals("ROLE_USER")) {
-                response.sendRedirect("/user/");
-                return;
+        for (GrantedAuthority grantedAuthority : authorities) {
+            String authority = grantedAuthority.getAuthority();
+            if (authority.equals("ROLE_ADMIN")) {
+                redirectUrl = "/admin/";
+                break;
+            } else if (authority.equals("ROLE_USER")) {
+                redirectUrl = "/user/";
             }
         }
-        response.sendRedirect("/");
+        response.sendRedirect(request.getContextPath() + redirectUrl);
     }
 }

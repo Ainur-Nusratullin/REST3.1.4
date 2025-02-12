@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -39,9 +41,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/", "/login", "/error").permitAll()
+                        .requestMatchers("/", "/login", "/error", "/registration").permitAll()
                         .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/admin/**")).hasAnyRole("ADMIN", "USER")
                         .requestMatchers(antMatcher("/user/**")).hasRole("USER")
                         .anyRequest().authenticated()
                 )
@@ -53,7 +54,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/login")
                         .permitAll()
                 )
                 .httpBasic(withDefaults());
