@@ -3,16 +3,12 @@ package ru.nusratullin.bootcrud.ProjectBoot.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 
@@ -27,23 +23,20 @@ public class AdminController {
         this.userService = userService;
     }
 
-
     @GetMapping("/")
-    public String getAllUser(@AuthenticationPrincipal User user,Model model) {
+    public String getAllUser(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("principalUser", userService.getUserHome(user));
         model.addAttribute("allUser", userService.readAllUser());
         Set<Role> allRoles = user.getRoles();
         model.addAttribute("allRoles", allRoles);
-        return "user";
+        return "admin";
     }
-
 
     @GetMapping("/addNewUser")
     public String addNewUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
-//        return "user-info";
-        return "user";
+        return "admin";
     }
 
     @PostMapping("/saveUser")
@@ -60,7 +53,7 @@ public class AdminController {
     @GetMapping("/editUser")
     public String updateUser(@RequestParam("id") Long id, Model model) {
         model.addAttribute("user", userService.readUserById(id));
-        return "update";
+        return "admin";
     }
 
     @PostMapping("/editUser")
@@ -75,7 +68,7 @@ public class AdminController {
         return "redirect:/admin/";
     }
 
-    @GetMapping("/deleteUser")
+    @PostMapping("/deleteUser")
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUserById(id);
         return "redirect:/admin/";
@@ -84,18 +77,6 @@ public class AdminController {
     @GetMapping("/find")
     public String getUserById(@RequestParam(value = "id", required = false) Long id, Model model) {
         model.addAttribute("user", userService.readUserById(id));
-        return "user";
+        return "admin";
     }
-
-//    @GetMapping("/getUser")
-//    @ResponseBody
-//    public Optional<User> getUserForEdit(@RequestParam Long id) {
-//        return userService.readUserById(id);
-//    }
-
-
-
-
-
-
 }

@@ -1,16 +1,16 @@
 package ru.nusratullin.bootcrud.ProjectBoot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.nusratullin.bootcrud.ProjectBoot.dao.UserDao;
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -44,27 +44,20 @@ public class UserServiceImpl implements UserService {
         user.setAge(age);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
-
-        Set<Role> roles = new HashSet<>();
-        for (String roleName : roleNames) {
-
-            Role role = roleService.findByName(roleName).orElseThrow(() ->
-                    ///нужно добавить поиск  по id
-                    new RuntimeException("Роль: " + roleName + " не найдена"));
-            roles.add(role);
-        }
+        Set<Role> roles = roleNames.stream()
+                .map(roleName -> {
+                    Optional<Role> existingRole = roleService.findByName(roleName);
+                    if (existingRole.isPresent()) {
+                        return existingRole.get();
+                    } else {
+                        Role newRole = new Role(roleName);
+                        return newRole;
+                    }
+                })
+                .collect(Collectors.toSet());
         user.setRoles(roles);
-
         userDao.save(user);
     }
-
-
-
-
-
-
-
-
 
     @Override
     @Transactional
@@ -137,5 +130,13 @@ public class UserServiceImpl implements UserService {
         newUser.setEmail(user.getEmail());
         newUser.setRoles(user.getRoles());
         return newUser;
+    }
+
+    @Override
+    public boolean checkIfAdmin(User user) {
+        Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
+        boolean ifAdmin = authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        return ifAdmin;
     }
 }

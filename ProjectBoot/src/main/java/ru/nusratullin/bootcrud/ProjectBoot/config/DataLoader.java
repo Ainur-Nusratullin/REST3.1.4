@@ -8,6 +8,7 @@ import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 import ru.nusratullin.bootcrud.ProjectBoot.service.RoleService;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -58,7 +59,8 @@ public class DataLoader {
                 Set<String> adminRoleNames = adminRoles.stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet());
-                userService.saveUser(admin.getName(), admin.getSurname(), admin.getAge(), admin.getEmail(), admin.getPassword(), adminRoleNames);
+                userService.saveUser(admin.getName(), admin.getSurname(), admin.getAge(),
+                        admin.getEmail(), admin.getPassword(), adminRoleNames);
             }
         } catch (Exception e) {
             System.err.println("Ошибка при создании админа: " + e.getMessage());
@@ -79,7 +81,8 @@ public class DataLoader {
                 Set<String> userRoleNames = userRoles.stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet());
-                userService.saveUser(user.getName(), user.getSurname(), user.getAge(), user.getEmail(), user.getPassword(), userRoleNames);
+                userService.saveUser(user.getName(), user.getSurname(), user.getAge(),
+                        user.getEmail(), user.getPassword(), userRoleNames);
             }
         } catch (Exception e) {
             System.err.println("Ошибка при создании юзера: " + e.getMessage());

@@ -1,6 +1,5 @@
 package ru.nusratullin.bootcrud.ProjectBoot.model;
 
-
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +37,6 @@ public class User implements UserDetails {
     )
 
     private Set<Role> roles = new HashSet<>();
-
 
     public User() {
     }

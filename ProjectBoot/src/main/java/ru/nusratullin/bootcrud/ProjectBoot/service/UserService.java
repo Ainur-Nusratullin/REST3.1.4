@@ -1,6 +1,5 @@
 package ru.nusratullin.bootcrud.ProjectBoot.service;
 
-import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 
 import java.util.List;
@@ -24,4 +23,6 @@ public interface UserService {
     void deleteUserById(Long id);
 
     User getUserHome(User user);
+
+    boolean checkIfAdmin(User user);
 }
