@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,30 +27,23 @@ public class AdminController {
         this.userService = userService;
     }
 
-//    @GetMapping("/")
-//    public String getAllUser(Model model) {
-//        model.addAttribute("allUser", userService.readAllUser());
-//        return "user";
-//    }
 
     @GetMapping("/")
     public String getAllUser(@AuthenticationPrincipal User user,Model model) {
-        model.addAttribute("currentUser", userService.getUserHome(user));
+        model.addAttribute("principalUser", userService.getUserHome(user));
         model.addAttribute("allUser", userService.readAllUser());
+        Set<Role> allRoles = user.getRoles();
+        model.addAttribute("allRoles", allRoles);
         return "user";
     }
-
-
-
-
-
 
 
     @GetMapping("/addNewUser")
     public String addNewUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
-        return "user-info";
+//        return "user-info";
+        return "user";
     }
 
     @PostMapping("/saveUser")
@@ -99,11 +94,7 @@ public class AdminController {
 //    }
 
 
-//    @GetMapping("/")
-//    public String getUser(@AuthenticationPrincipal User user, Model model) {
-//        model.addAttribute("currentUser", userService.getUserHome(user));
-//        return "user";
-//    }
+
 
 
 

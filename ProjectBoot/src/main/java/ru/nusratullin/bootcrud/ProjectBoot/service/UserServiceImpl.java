@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -51,14 +52,23 @@ public class UserServiceImpl implements UserService {
 
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
+
             Role role = roleService.findByName(roleName).orElseThrow(() ->
-                    new RuntimeException("Роль: " + roleName + "не найдена"));
+                    ///нужно добавить поиск  по id
+                    new RuntimeException("Роль: " + roleName + " не найдена"));
             roles.add(role);
         }
         user.setRoles(roles);
 
         userDao.save(user);
     }
+
+
+
+
+
+
+
 
     @Override
     @Transactional

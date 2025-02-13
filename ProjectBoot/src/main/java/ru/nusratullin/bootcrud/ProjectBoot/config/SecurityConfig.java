@@ -41,10 +41,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers("/", "/login", "/error", "/registration").permitAll()
-                        .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/user/**")).hasRole("USER")
-                        .anyRequest().authenticated()
+                                .requestMatchers("/", "/login", "/error", "/registration").permitAll()
+                                .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
+//                        .requestMatchers(antMatcher("/user/**")).hasRole("USER")
+                                .requestMatchers(antMatcher("/user/**")).hasAnyRole("USER", "ADMIN")
+                                .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")

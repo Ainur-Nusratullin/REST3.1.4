@@ -27,6 +27,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<User> optionalUser = userDao.findByEmail(email);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
+        System.out.println("Loaded user: " + user.getEmail());
+        System.out.println("User authorities: " + user.getAuthorities());
+
+
         return user;
     }
 }
