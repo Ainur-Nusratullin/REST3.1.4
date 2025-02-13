@@ -1,22 +1,17 @@
 package ru.nusratullin.bootcrud.ProjectBoot.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.nusratullin.bootcrud.ProjectBoot.dao.RoleDao;
 import ru.nusratullin.bootcrud.ProjectBoot.dao.UserDao;
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -62,6 +57,7 @@ public class UserServiceImpl implements UserService {
 
         userDao.save(user);
     }
+
 
 
 
