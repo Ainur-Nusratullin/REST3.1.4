@@ -33,19 +33,6 @@ public class DataLoader {
     @Transactional
     public void loadData() {
         try {
-            if (roleService.findByName("ROLE_USER").isEmpty()) {
-                roleService.save(new Role("ROLE_USER"));
-            }
-
-            if (roleService.findByName("ROLE_ADMIN").isEmpty()) {
-                roleService.save(new Role("ROLE_ADMIN"));
-            }
-        } catch (Exception e) {
-            System.err.println("Ошибка при создании ролей: " + e.getMessage());
-            e.printStackTrace();
-            return;
-        }
-        try {
             if (userService.findByEmail("admin@mail.ru").isEmpty()) {
                 User admin = new User();
                 admin.setName("admin");
@@ -53,12 +40,11 @@ public class DataLoader {
                 admin.setAge(27);
                 admin.setEmail("admin@mail.ru");
                 admin.setPassword("admin");
-                Set<Role> adminRoles = new HashSet<>();
-                roleService.findByName("ROLE_ADMIN").ifPresent(adminRoles::add);
-                roleService.findByName("ROLE_USER").ifPresent(adminRoles::add);
-                Set<String> adminRoleNames = adminRoles.stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toSet());
+
+                Set<String> adminRoleNames = new HashSet<>();
+                adminRoleNames.add("ROLE_ADMIN");
+                adminRoleNames.add("ROLE_USER");
+
                 userService.saveUser(admin.getName(), admin.getSurname(), admin.getAge(),
                         admin.getEmail(), admin.getPassword(), adminRoleNames);
             }
@@ -76,11 +62,10 @@ public class DataLoader {
                 user.setAge(29);
                 user.setEmail("user@mail.ru");
                 user.setPassword("user");
-                Set<Role> userRoles = new HashSet<>();
-                roleService.findByName("ROLE_USER").ifPresent(userRoles::add);
-                Set<String> userRoleNames = userRoles.stream()
-                        .map(Role::getName)
-                        .collect(Collectors.toSet());
+
+                Set<String> userRoleNames = new HashSet<>();
+                userRoleNames.add("ROLE_USER");
+
                 userService.saveUser(user.getName(), user.getSurname(), user.getAge(),
                         user.getEmail(), user.getPassword(), userRoleNames);
             }
@@ -90,3 +75,7 @@ public class DataLoader {
         }
     }
 }
+
+
+
+
