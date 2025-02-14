@@ -4,29 +4,21 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
-import ru.nusratullin.bootcrud.ProjectBoot.service.RoleService;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserService;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 @Component
 public class DataLoader {
 
     private UserService userService;
-    private RoleService roleService;
 
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setRoleService(RoleService roleService) {
-        this.roleService = roleService;
     }
 
     @PostConstruct
@@ -75,7 +67,5 @@ public class DataLoader {
         }
     }
 }
-
-
 
 
