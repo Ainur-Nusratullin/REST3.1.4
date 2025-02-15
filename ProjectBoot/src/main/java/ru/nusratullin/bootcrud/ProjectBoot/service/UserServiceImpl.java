@@ -51,7 +51,25 @@ public class UserServiceImpl implements UserService {
                         return existingRole.get();
                     } else {
                         Role newRole = new Role(roleName);
+                        System.out.println("////////////////////////////////////////");
+                        System.out.println(existingRole);
+                        System.out.println("////////////////////////////////////////");
                         return newRole;
+                        /*
+                       ////////////////////////////////////////
+                        Optional.empty
+                       ////////////////////////////////////////
+
+                       ////////////////////////////////////////
+                        Optional.empty
+                      ////////////////////////////////////////
+                      при первом вхождении, в бд нет ролей и благодаря user и каскаду создаются роли
+
+                      2 раза, для user и admin в бд,
+                      а затем чтобы не дублировать роли в бд
+                      в блоке if идет проверка
+                      и если в User убираю каскадность приложение падает
+                         */
                     }
                 })
                 .collect(Collectors.toSet());
