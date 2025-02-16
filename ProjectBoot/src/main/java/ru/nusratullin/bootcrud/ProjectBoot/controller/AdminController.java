@@ -64,6 +64,7 @@ public class AdminController {
                              @RequestParam String email,
                              @RequestParam String password,
                              @RequestParam(required = false) Set<String> roles) {
+
         userService.updateUser(id, name, surname, age, email, password, roles);
         return "redirect:/admin/";
     }

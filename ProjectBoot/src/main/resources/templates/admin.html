@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -62,13 +64,13 @@
                         <td th:text="${user.age}"></td>
                         <td th:text="${user.email}"></td>
                         <td>
-                                <span th:each="role, iterStat : ${user.roles}">
-                                    <span th:text="${role.name}"></span>
-                                    <span th:unless="${iterStat.last}">, </span>
-                                </span>
+                            <span th:each="role, iterStat : ${user.roles}">
+                                <span th:text="${role.name}"></span>
+                                <span th:unless="${iterStat.last}">, </span>
+                            </span>
                         </td>
                         <td><a href="#" class="btn-edit" data-bs-toggle="modal" data-bs-target="#editUserModal" th:attr="data-user-id=${user.id}, data-user-name=${user.name}, data-user-surname=${user.surname}, data-user-age=${user.age}, data-user-email=${user.email}">Edit</a></td>
-                        <td><a href="#" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteUserModal" th:attr="data-user-id=${user.id}">Delete</a></td>
+                        <td><a href="#" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteUserModal" th:attr="data-user-id=${user.id}, data-user-name=${user.name}, data-user-surname=${user.surname}, data-user-age=${user.age}, data-user-email=${user.email}">Delete</a></td>
                     </tr>
                     </tbody>
                 </table>
@@ -110,7 +112,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="editUserForm" th:action="@{/admin/editUser}" method="post">
+                <form id="editUserForm" th:action="@{/admin/editUser}" method="post" onsubmit="return prepareEditForm()">
                     <input type="hidden" id="editUserId" name="id"/>
                     <div class="mb-3">
                         <label for="editUserName" class="form-label">Name</label>
@@ -138,7 +140,7 @@
                             <li class="list-group-item" th:each="role : ${allRoles}" th:id="'edit-role-' + ${role.name}" th:text="${role.name}" th:attr="data-role-id=${role.name}" onclick="toggleRoleSelection(this);"></li>
                         </ul>
                         <!-- Скрытые поля для выбранных ролей -->
-                        <div id="editSelectedRolesContainer"></div>
+                        <div id="editSelectedRoles-container"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -150,9 +152,6 @@
     </div>
 </div>
 
-
-
-
 <!-- Модальное окно для удаления пользователя -->
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -162,7 +161,27 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this user?</p>
+                <!-- Информация о пользователе -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Name:</label>
+                    <span id="deleteUserName"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Surname:</label>
+                    <span id="deleteUserSurname"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Age:</label>
+                    <span id="deleteUserAge"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email:</label>
+                    <span id="deleteUserEmail"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Roles:</label>
+                    <span id="deleteUserRoles"></span>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -203,8 +222,28 @@
         selectedRolesContainer.innerHTML = ''; // Очищаем контейнер
 
         // Собираем выбранные роли
-        document.querySelectorAll('#role-list .list-group-item.active').forEach(item => {
-            const roleId = item.dataset.roleId;
+        const selectedRoles = document.querySelectorAll('#role-list .list-group-item.active');
+        selectedRoles.forEach(item => {
+            const roleId = item.getAttribute('data-role-id');
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = 'roles';
+            hiddenInput.value = roleId;
+            selectedRolesContainer.appendChild(hiddenInput);
+        });
+
+        return true; // Продолжаем отправку формы
+    }
+
+    // Функция для подготовки формы редактирования перед отправкой
+    function prepareEditForm() {
+        const selectedRolesContainer = document.getElementById('editSelectedRoles-container');
+        selectedRolesContainer.innerHTML = ''; // Очищаем контейнер
+
+        // Собираем выбранные роли
+        const selectedRoles = document.querySelectorAll('#editRoleList .list-group-item.active');
+        selectedRoles.forEach(item => {
+            const roleId = item.getAttribute('data-role-id');
             const hiddenInput = document.createElement('input');
             hiddenInput.type = 'hidden';
             hiddenInput.name = 'roles';
@@ -232,22 +271,25 @@
         });
     });
 
-
     // Обработчик для модального окна удаления
     document.querySelectorAll('.btn-delete').forEach(button => {
         button.addEventListener('click', function() {
             const userId = this.getAttribute('data-user-id');
+            const userName = this.getAttribute('data-user-name');
+            const userSurname = this.getAttribute('data-user-surname');
+            const userAge = this.getAttribute('data-user-age');
+            const userEmail = this.getAttribute('data-user-email');
+            const userRoles = this.closest('tr').querySelector('td:nth-child(6)').innerText; // Получаем роли из таблицы
+
+            // Заполняем модальное окно данными
             document.getElementById('deleteUserId').value = userId;
+            document.getElementById('deleteUserName').textContent = userName;
+            document.getElementById('deleteUserSurname').textContent = userSurname;
+            document.getElementById('deleteUserAge').textContent = userAge;
+            document.getElementById('deleteUserEmail').textContent = userEmail;
+            document.getElementById('deleteUserRoles').textContent = userRoles;
         });
     });
 </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
