@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-import ru.nusratullin.bootcrud.ProjectBoot.dao.UserRepository;
+import ru.nusratullin.bootcrud.ProjectBoot.dao.UserDao;
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 import ru.nusratullin.bootcrud.ProjectBoot.service.RoleService;
@@ -18,12 +18,12 @@ import java.util.List;
 public class AdminRestController {
     private final UserService userService;
     private final RoleService roleService;
-    private final UserRepository userRepository;
+    private final UserDao userDao;
 
-    public AdminRestController(UserService userService, RoleService roleService, UserRepository userRepository) {
+    public AdminRestController(UserService userService, RoleService roleService, UserDao userRepository) {
         this.userService = userService;
         this.roleService = roleService;
-        this.userRepository = userRepository;
+        this.userDao = userRepository;
     }
 
     @GetMapping("/users")
@@ -40,7 +40,7 @@ public class AdminRestController {
 
     @GetMapping("/currentUser")
     public ResponseEntity<User> getCurrentUser(Principal principal) {
-        User currentUser = userRepository.findByUsername(principal.getName())
+        User currentUser = userDao.findByUsername(principal.getName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }

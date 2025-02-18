@@ -7,7 +7,11 @@ import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserDao extends JpaRepository<User, Long> {
+    @Query("Select u from User u left join fetch u.roles where u.email=:email")
+    Optional<User> findByEmail(@Param("email") String email);
+
     @Query("Select u from User u left join fetch u.roles where u.username=:username")
     Optional<User> findByUsername(@Param("username") String username);
 }
+

@@ -15,8 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import ru.nusratullin.bootcrud.ProjectBoot.service.UserServiceImpl;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 
 @Configuration
 @EnableWebSecurity
@@ -34,18 +33,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Отключаем CSRF защиту
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN") // Доступ только для ADMIN
-                        .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER") // Доступ для ADMIN и USER
-                        .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .successHandler(loginSuccessHandler) // Обработчик успешной аутентификации
-                        .permitAll() // Разрешаем доступ к форме логина всем
+                        .successHandler(loginSuccessHandler)
+                        .permitAll()
                 )
                 .logout(logout -> logout
-                        .permitAll() // Разрешаем доступ к логауту всем
+                        .permitAll()
                 );
 
         return http.build();
@@ -59,8 +58,8 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userServiceImpl); // Устанавливаем UserDetailsService
-        authProvider.setPasswordEncoder(bCryptPasswordEncoder()); // Устанавливаем кодировщик паролей
+        authProvider.setUserDetailsService(userServiceImpl);
+        authProvider.setPasswordEncoder(bCryptPasswordEncoder());
         return authProvider;
     }
 

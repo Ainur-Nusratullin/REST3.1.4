@@ -5,6 +5,6 @@ import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 
 import java.util.Optional;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+public interface RoleDao extends JpaRepository<Role, Long> {
     Optional<Role> findByName(String name);
 }
