@@ -2,33 +2,25 @@ package ru.nusratullin.bootcrud.ProjectBoot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.nusratullin.bootcrud.ProjectBoot.dao.RoleDao;
+import org.springframework.stereotype.Service;
+import ru.nusratullin.bootcrud.ProjectBoot.dao.RoleRepository;
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 
+import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class RoleServiceImpl implements RoleService {
 
-    private RoleDao roleDao;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
-    public Optional<Role> findByName(String name) {
-        return roleDao.findByName(name);
-    }
-
-    @Override
-    public void save(Role roleUser) {
-        roleDao.save(roleUser);
-    }
-
-    @Override
-    public Optional<Role> findById(Long id) {
-        return roleDao.findById(id);
+    public List<Role> findAll() {
+        return roleRepository.findAll();
     }
 }

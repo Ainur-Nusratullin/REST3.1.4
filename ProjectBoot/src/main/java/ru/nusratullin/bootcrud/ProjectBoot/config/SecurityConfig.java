@@ -3,6 +3,7 @@ package ru.nusratullin.bootcrud.ProjectBoot.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ru.nusratullin.bootcrud.ProjectBoot.service.UserServiceImpl;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
@@ -20,61 +22,50 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private UserDetailsService userDetailsService;
     private LoginSuccessHandler loginSuccessHandler;
+    private UserServiceImpl userServiceImpl;
 
     @Autowired
-    public void setUserDetailsService(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
-    @Autowired
-    public void setLoginSuccessHandler(LoginSuccessHandler loginSuccessHandler) {
+    public SecurityConfig(LoginSuccessHandler loginSuccessHandler, @Lazy UserServiceImpl userServiceImpl) {
         this.loginSuccessHandler = loginSuccessHandler;
+        this.userServiceImpl = userServiceImpl;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((authz) -> authz
-                                .requestMatchers("/", "/login", "/error", "/registration").permitAll()
-                                .requestMatchers(antMatcher("/admin/**")).hasRole("ADMIN")
-//                        .requestMatchers(antMatcher("/user/**")).hasRole("USER")
-                                .requestMatchers(antMatcher("/user/**")).hasAnyRole("USER", "ADMIN")
-                                .anyRequest().authenticated()
+                .csrf(csrf -> csrf.disable()) // Отключаем CSRF защиту
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN") // Доступ только для ADMIN
+                        .requestMatchers("/user/**").hasAnyAuthority("ADMIN", "USER") // Доступ для ADMIN и USER
+                        .anyRequest().authenticated() // Все остальные запросы требуют аутентификации
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .usernameParameter("email")
-                        .successHandler(loginSuccessHandler)
-                        .permitAll()
+                        .successHandler(loginSuccessHandler) // Обработчик успешной аутентификации
+                        .permitAll() // Разрешаем доступ к форме логина всем
                 )
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                        .logoutSuccessUrl("/login")
-                        .permitAll()
-                )
-                .httpBasic(withDefaults());
+                        .permitAll() // Разрешаем доступ к логауту всем
+                );
 
         return http.build();
     }
 
     @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userServiceImpl); // Устанавливаем UserDetailsService
+        authProvider.setPasswordEncoder(bCryptPasswordEncoder()); // Устанавливаем кодировщик паролей
         return authProvider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        return authenticationProvider();
     }
 }
