@@ -400,7 +400,8 @@ document.getElementById('new-user-form').addEventListener('submit', function (ev
         .then(response => {
             if (response.ok) {
                 this.reset();
-                fetchUsers(); // Обновляем таблицу пользователей
+                fetchUsers();
+                window.location.href = '/admin';// Обновляем таблицу пользователей
             } else {
                 return response.json().then(data => {
                     throw new Error(data.message || 'Не удалось создать пользователя');
