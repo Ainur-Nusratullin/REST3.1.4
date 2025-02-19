@@ -42,44 +42,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return user.orElse(new User());
     }
 
-
-//    @Override
-//    @Transactional
-//    public void save(User user) {
-//        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-//            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//        } else {
-//            // Если пароль не передан, оставляем старый пароль
-//            User existingUser = userDao.findById(user.getId())
-//                    .orElseThrow(() -> new RuntimeException("User not found with id: " + user.getId()));
-//            user.setPassword(bCryptPasswordEncoder.encode(existingUser.getPassword()));
-//        }
-//
-//        Set<Role> roles = new HashSet<>();
-//        for (Role role : user.getRoles()) {
-//            Role existingRole = roleDao.findById(role.getId())
-//                    .orElseThrow(() -> new RuntimeException("Role not found with id: " + role.getId()));
-//            roles.add(existingRole);
-//        }
-//        user.setRoles(roles);
-//
-//        userDao.save(user);
-//    }
-
     @Override
     @Transactional
     public void save(User user) {
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            // Если пароль передан, шифруем его
+            // Если пароль передан, шифурем его
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         } else {
-            // Если пароль не передан, оставляем старый пароль без изменений
             User existingUser = userDao.findById(user.getId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + user.getId()));
-            user.setPassword(existingUser.getPassword()); // Сохраняем старый пароль без шифрования
+            user.setPassword(existingUser.getPassword());
         }
 
-        // Обновляем роли
         Set<Role> roles = new HashSet<>();
         for (Role role : user.getRoles()) {
             Role existingRole = roleDao.findById(role.getId())
@@ -88,7 +62,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         user.setRoles(roles);
 
-        // Сохраняем пользователя
         userDao.save(user);
     }
 

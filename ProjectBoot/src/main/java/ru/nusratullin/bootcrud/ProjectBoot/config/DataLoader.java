@@ -10,19 +10,18 @@ import ru.nusratullin.bootcrud.ProjectBoot.dao.UserDao;
 import ru.nusratullin.bootcrud.ProjectBoot.model.Role;
 import ru.nusratullin.bootcrud.ProjectBoot.model.User;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
-    private final RoleDao roleDao;
     private final PasswordEncoder passwordEncoder;
     private final UserDao userDao;
 
     @Autowired
-    public DataLoader(RoleDao roleRepository, PasswordEncoder passwordEncoder, UserDao userRepository) {
-        this.roleDao = roleRepository;
+    public DataLoader(PasswordEncoder passwordEncoder, UserDao userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userRepository;
     }
@@ -30,17 +29,15 @@ public class DataLoader implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        Role adminRole = roleDao.findByName("ADMIN")
-                .orElseGet(() -> {
-                    Role role = new Role("ADMIN");
-                    return roleDao.save(role);
-                });
 
-        Role userRole = roleDao.findByName("USER")
-                .orElseGet(() -> {
-                    Role role = new Role("USER");
-                    return roleDao.save(role);
-                });
+        Role AdminRole = new Role("ADMIN");
+        Role userRole = new Role("USER");
+
+        Set<Role> roleAdminUser = new HashSet<>();
+        roleAdminUser.add(AdminRole);
+        roleAdminUser.add(userRole);
+        Set<Role> roleUser = new HashSet<>();
+        roleUser.add(userRole);
 
         User admin = userDao.findByEmail("admin@mail.ru")
                 .orElseGet(() -> {
@@ -50,7 +47,7 @@ public class DataLoader implements CommandLineRunner {
                     user.setEmail("admin@mail.ru");
                     user.setAge(27);
                     user.setPassword(passwordEncoder.encode("admin"));
-                    user.setRoles(Set.of(adminRole, userRole));
+                    user.setRoles(roleAdminUser);
                     return userDao.save(user);
                 });
 
@@ -62,7 +59,7 @@ public class DataLoader implements CommandLineRunner {
                     user.setEmail("user@mail.ru");
                     user.setAge(25);
                     user.setPassword(passwordEncoder.encode("user"));
-                    user.setRoles(Set.of(userRole));
+                    user.setRoles(roleUser);
                     return userDao.save(user);
                 });
     }

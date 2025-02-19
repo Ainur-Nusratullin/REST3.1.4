@@ -1,5 +1,6 @@
 package ru.nusratullin.bootcrud.ProjectBoot.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ public class AdminRestController {
     private final RoleService roleService;
     private final UserDao userDao;
 
+    @Autowired
     public AdminRestController(UserService userService, RoleService roleService, UserDao userRepository) {
         this.userService = userService;
         this.roleService = roleService;
