@@ -1,101 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Information</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
-</head>
-<body>
-<header>
-    <nav class="navbar navbar-dark bg-dark p-0 shadow">
-        <div class="nav-item text-left text-white px-3">
-            <span id="navbarUserEmail"></span>
-            <span>with roles:</span>
-            <span id="navbarUserRoles"></span>
-        </div>
-        <ul class="navbar-nav mr-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="/logout">Logout</a>
-            </li>
-        </ul>
-    </nav>
-</header>
-
-<div class="container-fluid mt-3">
-    <div class="row">
-        <div class="col-md-2 px-0">
-            <div class="d-flex flex-column flex-shrink-0 p-0 text-white">
-                <ul class="nav nav-pills flex-column">
-
-
-
-                    <li class="nav-item" id="adminButtonLi" style="display: none;">
-                        <a href="/admin" class="nav-link no-refresh" role="tab">
-                            Admin
-                        </a>
-                    </li>
-
-
-
-                    <li class="nav-item">
-                        <a href="#userInfo" data-bs-toggle="pill" class="nav-link active no-refresh" role="tab"
-                           aria-current="false">
-                            User
-                        </a>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-
-
-        <div class="col-md-10 bg-light">
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="userInfo" role="tabpanel">
-                    <div class="container-fluid">
-                        <h2>User Information</h2>
-                        <div class="card">
-                            <div class="container-fluid px-0 bg-light border">
-                                <h5 class="card-header">About User</h5>
-                            </div>
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Surname</th>
-                                    <th>Age</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td id="userId"></td>
-                                    <td id="username"></td>
-                                    <td id="surname"></td>
-                                    <td id="age"></td>
-                                    <td id="email"></td>
-                                    <td id="roles"></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="/user.js"></script>
-</body>
-</html>
-
-
-
-
 <!--<!DOCTYPE html>-->
 <!--<html lang="en">-->
 <!--<head>-->
@@ -103,6 +5,7 @@
 <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
 <!--    <title>User Information</title>-->
 <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+
 <!--</head>-->
 <!--<body>-->
 <!--<header>-->
@@ -113,10 +16,6 @@
 <!--            <span id="navbarUserRoles"></span>-->
 <!--        </div>-->
 <!--        <ul class="navbar-nav mr-3">-->
-<!--            &lt;!&ndash; Кнопка "Admin" для пользователей с ролью ADMIN &ndash;&gt;-->
-<!--            <li class="nav-item text-nowrap" id="adminLink" style="display: none;">-->
-<!--                <a class="nav-link px-3" href="/admin">Admin</a>-->
-<!--            </li>-->
 <!--            <li class="nav-item text-nowrap">-->
 <!--                <a class="nav-link px-3" href="/logout">Logout</a>-->
 <!--            </li>-->
@@ -129,15 +28,29 @@
 <!--        <div class="col-md-2 px-0">-->
 <!--            <div class="d-flex flex-column flex-shrink-0 p-0 text-white">-->
 <!--                <ul class="nav nav-pills flex-column">-->
+
+
+
+<!--                    <li class="nav-item" id="adminButtonLi" style="display: none;">-->
+<!--                        <a href="/admin" class="nav-link no-refresh" role="tab">-->
+<!--                            Admin-->
+<!--                        </a>-->
+<!--                    </li>-->
+
+
+
 <!--                    <li class="nav-item">-->
 <!--                        <a href="#userInfo" data-bs-toggle="pill" class="nav-link active no-refresh" role="tab"-->
 <!--                           aria-current="false">-->
 <!--                            User-->
 <!--                        </a>-->
 <!--                    </li>-->
+
 <!--                </ul>-->
 <!--            </div>-->
 <!--        </div>-->
+
+
 <!--        <div class="col-md-10 bg-light">-->
 <!--            <div class="tab-content">-->
 <!--                <div class="tab-pane fade show active" id="userInfo" role="tabpanel">-->
@@ -177,33 +90,111 @@
 <!--    </div>-->
 <!--</div>-->
 <!--<script src="/user.js"></script>-->
-<!--<script>-->
-<!--    // Пример данных пользователя (замените на реальные данные, полученные с сервера)-->
-<!--    const user = {-->
-<!--        id: 1,-->
-<!--        name: "John",-->
-<!--        surname: "Doe",-->
-<!--        age: 30,-->
-<!--        email: "john.doe@example.com",-->
-<!--        roles: ["USER", "ADMIN"] // Роли пользователя-->
-<!--    };-->
-
-<!--    // Заполнение данных на странице-->
-<!--    document.getElementById('userId').textContent = user.id;-->
-<!--    document.getElementById('username').textContent = user.name;-->
-<!--    document.getElementById('surname').textContent = user.surname;-->
-<!--    document.getElementById('age').textContent = user.age;-->
-<!--    document.getElementById('email').textContent = user.email;-->
-<!--    document.getElementById('roles').textContent = user.roles.join(', ');-->
-
-<!--    // Отображение email и ролей в навбаре-->
-<!--    document.getElementById('navbarUserEmail').textContent = user.email;-->
-<!--    document.getElementById('navbarUserRoles').textContent = user.roles.join(', ');-->
-
-<!--    // Показ кнопки "Admin", если пользователь является администратором-->
-<!--    if (user.roles.includes("ADMIN")) {-->
-<!--        document.getElementById('adminLink').style.display = 'block';-->
-<!--    }-->
-<!--</script>-->
 <!--</body>-->
 <!--</html>-->
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .navbar-dark .navbar-nav .nav-link {
+            color: white;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .nav-pills .nav-link {
+            color: #007bff;
+        }
+
+        /* Убираем белый фон при наведении на кнопку "User" */
+        .nav-pills .nav-link:not(.active):hover {
+            background-color: transparent;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        <span id="navbarUserEmail"></span> with role:
+        <span id="navbarUserRoles"></span>
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link px-3" href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="col-md-2 px-0">
+        <div class="d-flex flex-column flex-shrink-0 p-0 text-white">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item" id="adminButtonLi" style="display: none;">
+                    <a href="/admin" class="nav-link no-refresh">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#userInfo" class="nav-link active no-refresh" role="tab">User</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-10 bg-light">
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="userInfo" role="tabpanel">
+                <div class="container-fluid">
+                    <h2>User Information</h2>
+                    <div class="card">
+                        <div class="container-fluid px-0 bg-light border">
+                            <h5 class="card-header">About User</h5>
+                        </div>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td id="userId"></td>
+                                <td id="username"></td>
+                                <td id="surname"></td>
+                                <td id="age"></td>
+                                <td id="email"></td>
+                                <td id="roles"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/user.js"></script>
+</body>
+</html>
